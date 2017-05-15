@@ -17,33 +17,76 @@ describe('DocumentHandler', () => {
     });
   };
 
+  const itFlagsThePropertyAsAdded = (handler, name) => {
+    it('flags the property as added', () => {
+      expect(handler.states[name].name).to.equal(PropertyState.ADDED);
+    });
+  };
+
+  const itFlagsThePropertyAsDeleted = (handler, name) => {
+    it('flags the property as deleted', () => {
+      expect(handler.states[name].name).to.equal(PropertyState.DELETED);
+    });
+  };
+
+  const itFlagsThePropertyAsEdited = (handler, name) => {
+    it('flags the property as edited', () => {
+      expect(handler.states[name].name).to.equal(PropertyState.EDITED);
+    });
+  };
+
   describe('#deleteProperty', () => {
     context('when the property exists', () => {
-      const doc = { name: OLD };
-      const handler = new DocumentHandler();
-      const proxy = new Proxy(doc, handler);
+      context('when the property has not been edited', () => {
+        const doc = { name: OLD };
+        const handler = new DocumentHandler();
+        const proxy = new Proxy(doc, handler);
 
-      before(() => {
-        delete proxy.name;
+        before(() => {
+          delete proxy.name;
+        });
+
+        it('deletes the property from the proxy', () => {
+          expect(proxy.name).to.equal(undefined);
+        });
+
+        it('deletes the property from the target', () => {
+          expect(doc.name).to.equal(undefined);
+        });
+
+        it('sets the original value on the state', () => {
+          expect(handler.states.name.originalValue).to.equal(OLD);
+        });
+
+        itFlagsThePropertyAsDeleted(handler, 'name');
+        itFlagsTheDocumentAsEdited(handler);
       });
 
-      it('deletes the property from the proxy', () => {
-        expect(proxy.name).to.equal(undefined);
-      });
+      context('when the property has been edited', () => {
+        const doc = { name: OLD };
+        const handler = new DocumentHandler();
+        const proxy = new Proxy(doc, handler);
 
-      it('deletes the property from the target', () => {
-        expect(doc.name).to.equal(undefined);
-      });
+        before(() => {
+          proxy.name = NEW;
+          delete proxy.name;
+        });
 
-      it('flags the property as deleted', () => {
-        expect(handler.states.name.name).to.equal(PropertyState.DELETED);
-      });
+        it('deletes the property from the proxy', () => {
+          expect(proxy.name).to.equal(undefined);
+        });
 
-      it('sets the original value on the state', () => {
-        expect(handler.states.name.originalValue).to.equal(OLD);
-      });
+        it('deletes the property from the target', () => {
+          expect(doc.name).to.equal(undefined);
+        });
 
-      itFlagsTheDocumentAsEdited(handler);
+        it('sets the original value on the state', () => {
+          expect(handler.states.name.originalValue).to.equal(OLD);
+        });
+
+        itFlagsThePropertyAsDeleted(handler, 'name');
+        itFlagsTheDocumentAsEdited(handler);
+      });
     });
   });
 
@@ -87,10 +130,7 @@ describe('DocumentHandler', () => {
         expect(doc.name).to.equal(NEW);
       });
 
-      it('flags the property as added', () => {
-        expect(handler.states.name.name).to.equal(PropertyState.ADDED);
-      });
-
+      itFlagsThePropertyAsAdded(handler, 'name');
       itFlagsTheDocumentAsEdited(handler);
     });
 
@@ -112,14 +152,11 @@ describe('DocumentHandler', () => {
           expect(doc.name).to.equal(NEW);
         });
 
-        it('flags the property as edited', () => {
-          expect(handler.states.name.name).to.equal(PropertyState.EDITED);
-        });
-
         it('sets the original value on the state', () => {
           expect(handler.states.name.originalValue).to.equal(OLD);
         });
 
+        itFlagsThePropertyAsEdited(handler, 'name');
         itFlagsTheDocumentAsEdited(handler);
       });
 
