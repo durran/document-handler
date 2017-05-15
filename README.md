@@ -10,7 +10,7 @@ Create a new `DocumentHandler` and use it as the proxy's handler:
 ```js
 const DocumentHandler = require('document-handler');
 
-const obj = { band: 'Aphex Twin', genre: 'Electronic };
+const obj = { band: 'Aphex Twin', genre: 'Electronic' };
 const handler = new DocumentHandler();
 const proxy = new Proxy(obj, handler);
 ```
