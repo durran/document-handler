@@ -47,6 +47,28 @@ describe('DocumentHandler', () => {
     });
   });
 
+  describe('#isEdited', () => {
+    context('when the document has edits', () => {
+      const doc = { name: OLD };
+      const handler = new DocumentHandler();
+      const proxy = new Proxy(doc, handler);
+
+      before(() => {
+        delete proxy.name;
+      });
+
+      itFlagsTheDocumentAsEdited(handler);
+    });
+
+    context('when the document has no edits', () => {
+      const doc = { name: OLD };
+      const handler = new DocumentHandler();
+      const proxy = new Proxy(doc, handler);
+
+      itFlagsTheDocumentAsClean(handler);
+    });
+  });
+
   describe('#set', () => {
     context('when the property does not yet exist', () => {
       const doc = {};
