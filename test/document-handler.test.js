@@ -56,7 +56,25 @@ describe('DocumentHandler', () => {
       });
 
       context('when the value is not changed', () => {
+        const doc = { name: OLD };
+        const handler = new DocumentHandler();
+        const proxy = new Proxy(doc, handler);
 
+        before(() => {
+          proxy.name = OLD;
+        });
+
+        it('keeps the value on the proxy', () => {
+          expect(proxy.name).to.equal(OLD);
+        });
+
+        it('keeps the value on the target', () => {
+          expect(doc.name).to.equal(OLD);
+        });
+
+        it('does not create a state for the property', () => {
+          expect(handler.states.name).to.equal(undefined);
+        });
       });
     });
   });
