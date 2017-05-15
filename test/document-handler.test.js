@@ -5,6 +5,18 @@ const OLD = 'old name';
 const NEW = 'new name';
 
 describe('DocumentHandler', () => {
+  const itFlagsTheDocumentAsEdited = (handler) => {
+    it('flags the document as edited', () => {
+      expect(handler.isEdited()).to.equal(true);
+    });
+  };
+
+  const itFlagsTheDocumentAsClean = (handler) => {
+    it('flags the document as clean', () => {
+      expect(handler.isEdited()).to.equal(false);
+    });
+  };
+
   describe('#set', () => {
     context('when the property does not yet exist', () => {
       const doc = {};
@@ -26,6 +38,8 @@ describe('DocumentHandler', () => {
       it('flags the property as added', () => {
         expect(handler.states.name.name).to.equal(PropertyState.ADDED);
       });
+
+      itFlagsTheDocumentAsEdited(handler);
     });
 
     context('when the property exists', () => {
@@ -53,6 +67,8 @@ describe('DocumentHandler', () => {
         it('sets the original value on the state', () => {
           expect(handler.states.name.originalValue).to.equal(OLD);
         });
+
+        itFlagsTheDocumentAsEdited(handler);
       });
 
       context('when the value is not changed', () => {
@@ -72,9 +88,7 @@ describe('DocumentHandler', () => {
           expect(doc.name).to.equal(OLD);
         });
 
-        it('does not create a state for the property', () => {
-          expect(handler.states.name).to.equal(undefined);
-        });
+        itFlagsTheDocumentAsClean(handler);
       });
 
       context('when the value is changed from a new value to the original', () => {
@@ -95,9 +109,7 @@ describe('DocumentHandler', () => {
           expect(doc.name).to.equal(OLD);
         });
 
-        it('does not create a state for the property', () => {
-          expect(handler.states.name).to.equal(undefined);
-        });
+        itFlagsTheDocumentAsClean(handler);
       });
     });
   });
