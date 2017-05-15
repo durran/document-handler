@@ -1,40 +1,11 @@
 const { expect } = require('chai');
-const { DocumentHandler, PropertyState } = require('../');
+const SharedExamples = require('./shared/examples');
+const DocumentHandler = require('../');
 
 const OLD = 'old name';
 const NEW = 'new name';
 
 describe('DocumentHandler', () => {
-  const itFlagsTheDocumentAsEdited = (handler) => {
-    it('flags the document as edited', () => {
-      expect(handler.isEdited()).to.equal(true);
-    });
-  };
-
-  const itFlagsTheDocumentAsClean = (handler) => {
-    it('flags the document as clean', () => {
-      expect(handler.isEdited()).to.equal(false);
-    });
-  };
-
-  const itFlagsThePropertyAsAdded = (handler, name) => {
-    it('flags the property as added', () => {
-      expect(handler.states[name].name).to.equal(PropertyState.ADDED);
-    });
-  };
-
-  const itFlagsThePropertyAsDeleted = (handler, name) => {
-    it('flags the property as deleted', () => {
-      expect(handler.states[name].name).to.equal(PropertyState.DELETED);
-    });
-  };
-
-  const itFlagsThePropertyAsEdited = (handler, name) => {
-    it('flags the property as edited', () => {
-      expect(handler.states[name].name).to.equal(PropertyState.EDITED);
-    });
-  };
-
   describe('#deleteProperty', () => {
     context('when the property exists', () => {
       context('when the property has not been edited', () => {
@@ -58,8 +29,8 @@ describe('DocumentHandler', () => {
           expect(handler.states.name.originalValue).to.equal(OLD);
         });
 
-        itFlagsThePropertyAsDeleted(handler, 'name');
-        itFlagsTheDocumentAsEdited(handler);
+        SharedExamples.itFlagsThePropertyAsDeleted(handler, 'name');
+        SharedExamples.itFlagsTheDocumentAsEdited(handler);
       });
 
       context('when the property has been edited', () => {
@@ -84,8 +55,8 @@ describe('DocumentHandler', () => {
           expect(handler.states.name.originalValue).to.equal(OLD);
         });
 
-        itFlagsThePropertyAsDeleted(handler, 'name');
-        itFlagsTheDocumentAsEdited(handler);
+        SharedExamples.itFlagsThePropertyAsDeleted(handler, 'name');
+        SharedExamples.itFlagsTheDocumentAsEdited(handler);
       });
     });
   });
@@ -100,7 +71,7 @@ describe('DocumentHandler', () => {
         delete proxy.name;
       });
 
-      itFlagsTheDocumentAsEdited(handler);
+      SharedExamples.itFlagsTheDocumentAsEdited(handler);
     });
 
     context('when the document has no edits', () => {
@@ -108,7 +79,7 @@ describe('DocumentHandler', () => {
       const handler = new DocumentHandler();
       const proxy = new Proxy(doc, handler);
 
-      itFlagsTheDocumentAsClean(handler);
+      SharedExamples.itFlagsTheDocumentAsClean(handler);
     });
   });
 
@@ -130,8 +101,8 @@ describe('DocumentHandler', () => {
         expect(doc.name).to.equal(NEW);
       });
 
-      itFlagsThePropertyAsAdded(handler, 'name');
-      itFlagsTheDocumentAsEdited(handler);
+      SharedExamples.itFlagsThePropertyAsAdded(handler, 'name');
+      SharedExamples.itFlagsTheDocumentAsEdited(handler);
     });
 
     context('when the property exists', () => {
@@ -156,8 +127,8 @@ describe('DocumentHandler', () => {
           expect(handler.states.name.originalValue).to.equal(OLD);
         });
 
-        itFlagsThePropertyAsEdited(handler, 'name');
-        itFlagsTheDocumentAsEdited(handler);
+        SharedExamples.itFlagsThePropertyAsEdited(handler, 'name');
+        SharedExamples.itFlagsTheDocumentAsEdited(handler);
       });
 
       context('when the value is not changed', () => {
@@ -177,7 +148,7 @@ describe('DocumentHandler', () => {
           expect(doc.name).to.equal(OLD);
         });
 
-        itFlagsTheDocumentAsClean(handler);
+        SharedExamples.itFlagsTheDocumentAsClean(handler);
       });
 
       context('when the value is changed from a new value to the original', () => {
@@ -198,7 +169,7 @@ describe('DocumentHandler', () => {
           expect(doc.name).to.equal(OLD);
         });
 
-        itFlagsTheDocumentAsClean(handler);
+        SharedExamples.itFlagsTheDocumentAsClean(handler);
       });
     });
   });
