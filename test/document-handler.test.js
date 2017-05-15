@@ -17,6 +17,36 @@ describe('DocumentHandler', () => {
     });
   };
 
+  describe('#deleteProperty', () => {
+    context('when the property exists', () => {
+      const doc = { name: OLD };
+      const handler = new DocumentHandler();
+      const proxy = new Proxy(doc, handler);
+
+      before(() => {
+        delete proxy.name;
+      });
+
+      it('deletes the property from the proxy', () => {
+        expect(proxy.name).to.equal(undefined);
+      });
+
+      it('deletes the property from the target', () => {
+        expect(doc.name).to.equal(undefined);
+      });
+
+      it('flags the property as deleted', () => {
+        expect(handler.states.name.name).to.equal(PropertyState.DELETED);
+      });
+
+      it('sets the original value on the state', () => {
+        expect(handler.states.name.originalValue).to.equal(OLD);
+      });
+
+      itFlagsTheDocumentAsEdited(handler);
+    });
+  });
+
   describe('#set', () => {
     context('when the property does not yet exist', () => {
       const doc = {};
