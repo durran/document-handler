@@ -1,4 +1,6 @@
-## Document Handler [![Build Status](https://travis-ci.org/durran/document-handler.svg?branch=master)](https://travis-ci.org/durran/document-handler)
+## Document Handler
+
+[![Build Status](https://travis-ci.org/durran/document-handler.svg?branch=master)](https://travis-ci.org/durran/document-handler)
 
 A handler for Javascript `Proxy` objects that tracks document modifications,
 additions, and deletions.
