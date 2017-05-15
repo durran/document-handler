@@ -1,13 +1,13 @@
-## Document Handler
+# Document Handler
 
 [![Build Status](https://travis-ci.org/durran/document-handler.svg?branch=master)](https://travis-ci.org/durran/document-handler)
 
 A handler for Javascript `Proxy` objects that tracks document modifications,
 additions, and deletions.
 
-### Usage
+## Usage
 
-#### Creating The Handler & Proxy
+### Creating The Handler & Proxy
 
 Create a new `DocumentHandler` and use it as the proxy's handler:
 
@@ -19,7 +19,7 @@ const handler = new DocumentHandler();
 const proxy = new Proxy(obj, handler);
 ```
 
-#### Editing Properties
+### Editing Properties
 
 Setting of properties on the `Proxy` creates a state object for
 each edited property:
@@ -33,7 +33,7 @@ handler.states.band.name // Returns DocumentHandler.EDITED
 handler.states.band.originalValue // Returns 'Aphex Twin'
 ```
 
-#### Deleting Properties
+### Deleting Properties
 
 Deleting properties from the `Proxy` creates a state object for
 each deleted property.
